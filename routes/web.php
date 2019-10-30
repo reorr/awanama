@@ -19,5 +19,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/profile/settings', 'ProfileController@settings')->name('profile.settings');
-Route::get('/profile/{username}', 'ProfileController@index')->name('profile.show');
+Route::get('/settings', 'ProfileController@settings')->name('profile.settings');
+Route::put('/settings/update/{id}', 'ProfileController@update')->name('profile.update');
+Route::get('/deactive/{id}', 'ProfileController@deactive')->name('profile.deactive');
+Route::get('/{username}', 'ProfileController@index')->name('profile.show');
