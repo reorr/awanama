@@ -19,6 +19,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::post('/post/send', 'PostController@create')->name('post.create');
+
 Route::get('/settings', 'ProfileController@settings')->name('profile.settings');
 Route::put('/settings/update/{id}', 'ProfileController@update')->name('profile.update');
 Route::get('/deactive/{id}', 'ProfileController@deactive')->name('profile.deactive');
