@@ -1,12 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
+    <div class="row">
+        <div class="col">
             {{ $user->name }}
             <br/>
             Bergabung sejak {{ Carbon\Carbon::parse($user->created_at)->diffForHumans() }}
-            @if (Auth::user()->id == $user->id)
+        </div>
+        <div class="col">
+            @if(is_null(Auth::user()))
+            @elseif (Auth::user()->id == $user->id)
             <br/>
             <form action="{{ route('post.create') }}" method="POST">
             {{-- <form action=""> --}}
@@ -16,13 +19,31 @@
                 <button type="submit" class="btn btn-primary">Kirimkan</button>
             </form>
             @endif
-            <br/>
-            @foreach ($posts as $post)
-            <div class="card">
-                <p>{{ $post->content }}</p>
-                <p>{{ Carbon\Carbon::parse($post->created_at)->diffForHumans() }}</p>
-            </div>
-            @endforeach
+        </div>
     </div>
-</div>
-@endsection
+    <div class="row">
+        @foreach ($posts as $post)
+        <div class="col">
+            <div class="card-deck mb-3 text-center">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <p>{{  $user->name }}</p>
+                        <p>{{ Carbon\Carbon::parse($post->created_at)->diffForHumans() }}</p>
+                        <p>{{ $post->content }}</p>
+                        {{-- <p class="card-text">Tanggal Mulai: {{ $project['tanggal_mulai'] }}.</p>
+                        <p class="card-text">Tanggal Mulai: {{ $project['tanggal_target'] }}.</p> --}}
+                    </div>
+                    <div class="card-button">
+                        @if(is_null(Auth::user()))
+                        @elseif (Auth::user()->id == $user->id)
+                        <a href="/post/delete/{{ $post->id }}">Hapus</a>
+                        <a href="/posts/delete/{{ $post->id }}">Edit</a>
+                        @endif
+                        <a href="/posts/delete/{{ $post->id }}">Komentar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+        @endsection

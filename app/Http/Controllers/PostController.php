@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Post;
+use App\Tag;
 
 class PostController extends Controller
 {
@@ -29,13 +30,48 @@ class PostController extends Controller
             'content' => ['required', 'string', 'max:200'],
         ]);
 
-        Post::create([
-            'user_id' => $request['userid'],
-            'content' => $request['content'],
-            'created_at' => now(),
-        ]);
+        $content = $request['content'];
+        $user_id = $request['userid'];
 
-        return redirect('/home');
+        // Post::create([
+        //     'user_id' => $request['userid'],
+        //     'content' => $request['content'],
+        //     'created_at' => now(),
+        // ]);
+
+        $post = new Post();
+        $post->user_id = $user_id;
+        $post->content = $content;
+        $post->created_at = now();
+        $post->save();
+        $post_id = $post->id;
+        // dd($post_id);
+
+
+        function getHashtags($string, $post_id) {
+            $hashtags= FALSE;
+            preg_match_all("/(#\w+)/u", $string, $matches);
+            if ($matches) {
+                $hashtagsArray = array_count_values($matches[0]);
+                $hashtags = array_keys($hashtagsArray);
+            }
+            // return $hashtags;
+            // $post_id = \DB::table('posts')->insertGetId([
+            //     'user_id' => $user_id,
+            //     'content' => $content
+            // ]);
+            foreach($hashtags as $hashtag){
+                Tag::create([
+                    'post_id' => $post_id,
+                    'title' => $hashtag,
+                    'created_at' => now(),
+                ]);
+            }
+        }
+
+        getHashtags($content, $post_id);
+
+        return redirect(\Auth::user()->username);
     }
 
     /**
@@ -91,6 +127,9 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::find($id);
+        $post->delete();
+        // dd(\Auth::user());
+        return redirect(\Auth::user()->username);
     }
 }

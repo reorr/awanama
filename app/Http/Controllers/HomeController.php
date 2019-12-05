@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
+use App\Post;
 
 class HomeController extends Controller
 {
@@ -23,6 +25,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        // $user = User::where('username', $username)->first();
+        // if(isset($user))
+        $posts = Post::get();
+        // return $posts;
+        return view('home', ['posts' => $posts]);
+        // return "User not Found!";
+        // return view('home');
     }
 }

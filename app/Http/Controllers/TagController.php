@@ -3,24 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
-use App\Post;
 
-class ProfileController extends Controller
+class TagController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $username)
+    public function index()
     {
-        $user = User::where('username', $username)->first();
-        if ($user)
-        $posts = Post::where('user_id', $user->id)->get();
-            // dd($posts);
-            return view('profile.show', ['user' => $user], ['posts' => $posts]);
-        return "User not Found!";
+        //
     }
 
     /**
@@ -28,9 +21,9 @@ class ProfileController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function settings()
+    public function create()
     {
-        return view('profile.settings');
+        //
     }
 
     /**
@@ -75,22 +68,7 @@ class ProfileController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'min:4', 'max:20']
-        ]);
-
-        $user = User::find($id);
-
-        // $input = Input::only('name','username');
-
-        // $user->fill($input)->save();
-        // $user->update(request()->intersect('name', 'username'));
-        $user->name = $request->name;
-        $user->username = $request->username;
-        $user->save();
-
-        return redirect()->route('profile.show', $user->username);
+        //
     }
 
     /**
@@ -102,18 +80,5 @@ class ProfileController extends Controller
     public function destroy($id)
     {
         //
-    }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function deactive($id)
-    {
-        $user = User::find($id);
-        $user->delete();
-
-        return redirect('/home');
     }
 }
